@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import router from "next/router";

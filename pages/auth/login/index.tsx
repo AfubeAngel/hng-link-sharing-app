@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 import { useRouter } from 'next/router'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/lib/firebase'

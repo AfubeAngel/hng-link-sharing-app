@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 
 
 export default function Createaccount() {

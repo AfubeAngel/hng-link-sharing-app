@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from 'yup'
+import * as Yup from 'yup';
 import Image from "next/image";
 
 interface ProfileFormProps {
