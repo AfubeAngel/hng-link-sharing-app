@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface ProfileData {
   profileImage: string;
@@ -21,7 +21,12 @@ export const useProfile = () => {
   return context;
 };
 
-export const ProfileProvider: React.FC = ({ }) => {
+// Define the props type to include children
+interface ProfileProviderProps {
+  children: ReactNode;
+}
+
+export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) => {
   const [profileData, setProfileData] = useState<ProfileData>({
     profileImage: '',
     firstName: '',
@@ -32,6 +37,7 @@ export const ProfileProvider: React.FC = ({ }) => {
 
   return (
     <ProfileContext.Provider value={{ profileData, setProfileData }}>
+      {children}
     </ProfileContext.Provider>
   );
 };
