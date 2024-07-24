@@ -25,10 +25,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
     console.log('test123:::');
 
     updateProfileData([], profileImage, values.firstName, values.lastName, values.email);
-    console.log('image:::', profileImage);
-    console.log('firstname:::', values.firstName);
-    console.log('lastname:::', values.lastName);
-
   };
 
   const validationSchema = Yup.object({
@@ -47,7 +43,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
         <div className="flex flex-col gap-2 md:flex-row lg:gap-6 flex-grow items-center justify-center">
           <div className="relative w-48 h-48 bg-purple-400 overflow-hidden flex items-center justify-center">
             {profileImage ? (
-              <Image src={profileImage} alt="Profile" layout="fill" objectFit="cover" />
+              <Image src={profileImage} alt="Profile" objectFit="cover" width={193} height={193} />
             ) : (
               <span className="text-white">Add Image</span>
             )}
@@ -72,7 +68,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
           handleSave(values);
         }}
       >
-        {({ isSubmitting, isValid }) => (
+        {({ isSubmitting, isValid, handleSubmit }) => (
           <>
           <Form className="space-y-4 bg-[#FAFAFA] p-5 ">
             <div className="flex flex-col gap-2 md:flex-row justify-between">
@@ -127,14 +123,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
           <div className="flex justify-end">
           <button
                 type="submit"
+                // onClick={handleSave}
+                onClick={() => handleSubmit()}
                 disabled={!isValid || isSubmitting}
                 className={`mt-4 w-[91px] flex justify-center items-center text-base font-semibold text-white rounded-lg h-[46px] ${
                   isValid && !isSubmitting ? "bg-[#633CFF]" : "opacity-[25%] bg-[#633CFF] cursor-not-allowed"
                 }`}
               >
                 Save
-              </button>
-      </div>
+          </button>
+        </div>
           </>
         )}
       </Formik>

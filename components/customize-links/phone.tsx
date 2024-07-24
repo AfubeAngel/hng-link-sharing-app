@@ -42,15 +42,15 @@ const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage, firstName, l
                   alt="Profile"
                   width={96}
                   height={96}
-                  className="rounded-full"
+                  className="rounded-full max-h-24 object-cover "
                 />
               )}
             </div>
             <div className="w-[160px] h-[16px] rounded-[104px] bg-gray-300 mb-2">
-              <div className="text-center text-black">{firstName} {lastName}</div>
+              <div className="text-center font-semibold text-[18px] leading-[27px] text-black bg-white ">{firstName} {lastName}</div>
             </div>
-            <div className="w-[72px] h-[8px] rounded-[104px] bg-gray-300 mb-14">
-              <div className="text-center text-black">{email}</div>
+            <div className="w-[72px] mt-1 h-[8px] rounded-[104px] bg-gray-300 mb-14">
+              <div className="w-full font-normal text-sm text-black bg-white">{email}</div>
             </div>
 
             <div className="link-boxes flex flex-wrap justify-center w-full gap-4">

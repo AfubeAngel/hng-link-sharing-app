@@ -9,6 +9,7 @@ import { auth, db } from "@/lib/firebase";
 interface LinkFormProps {
     updateProfileData: (links: { label: string; url: string }[]) => void;
   }  
+  
 
 const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
   const [isAddingLink, setIsAddingLink] = useState(false);
