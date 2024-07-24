@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from 'yup'
+import Image from "next/image";
 
 interface ProfileFormProps {
-  updateProfileData: (links: { label: string; url: string }[], profileImage: string) => void;
+  updateProfileData: (links: { label: string; url: string }[], profileImage: string, firstName: string, lastName: string, email: string) => void;
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
@@ -18,45 +21,124 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
     }
   };  
   
-  const handleSave = () => {
-    // Update profile image in Firebase or any other backend
-    // For this example, we're updating the data directly
-    updateProfileData([], profileImage);
+  const handleSave = (values:any) => {
+    console.log('test123:::');
+
+    updateProfileData([], profileImage, values.firstName, values.lastName, values.email);
+    console.log('image:::', profileImage);
+    console.log('firstname:::', values.firstName);
+    console.log('lastname:::', values.lastName);
+
   };
 
-
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required("Can’t be empty"),
+    lastName: Yup.string().required("Can’t be empty"),
+    email: Yup.string().email("Invalid email address").required("Can’t be empty"),
+  });
 
   return (
-    <div>
+    <div className="p-4 md:p-10 max-w-[728px] ">
       <h2 className="text-black">Profile Details</h2>
-      <p>Add your details to create a personal touch to your profile.</p>
+      <p className="text-black">Add your details to create a personal touch to your profile.</p>
 
-      <div className="flex p-5 bg-gray-100 rounded-lg md:h-[233px] justify-between ">
-        <p>Profile picture</p>
-        <div className="flex gap-6 ">
-          <span className="text-black md:w-[193px] md:h-[193px] bg-purple-400 ">Add Image</span>
-          <div className="flex flex-col justify-center md:w-[215px]">
-          <p>Image must be below 1024x1024px.</p>
-          <p>Use PNG or JPG format.</p>
+      <div className="flex flex-col gap-2 md:flex-row p-5 bg-[#FAFAFA] rounded-lg my-6 justify-between">
+        <p className="flex-none text-gray-700">Profile picture</p>
+        <div className="flex flex-col gap-2 md:flex-row lg:gap-6 flex-grow items-center justify-center">
+          <div className="relative w-48 h-48 bg-purple-400 overflow-hidden flex items-center justify-center">
+            {profileImage ? (
+              <Image src={profileImage} alt="Profile" layout="fill" objectFit="cover" />
+            ) : (
+              <span className="text-white">Add Image</span>
+            )}
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handleProfileImageChange}
+              className="absolute inset-0 opacity-0 cursor-pointer"
+            />
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="text-gray-700">Image must be below 1024x1024px.</p>
+            <p className="text-gray-700">Use PNG or JPG format.</p>
           </div>
         </div>
       </div>
 
-      <form className="mt-6">
-        <div>
-          <label className="text-black">First Name*</label>
-          <input className="" type="text" name="name" required />
-        </div>
-        <div>
-          <label className="text-black">Last Name</label>
-          <input type="text" name="lastname" required />
-        </div>
-        <div>
-          <label className="text-black">Email</label>
-          <input type="email" name="email" required />
-        </div>
-        <button onClick={handleSave} className="text-black" type="submit">Save</button>
-      </form>
+      <Formik
+        initialValues={{ firstName: "", lastName: "", email: "" }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          handleSave(values);
+        }}
+      >
+        {({ isSubmitting, isValid }) => (
+          <>
+          <Form className="space-y-4 bg-[#FAFAFA] p-5 ">
+            <div className="flex flex-col gap-2 md:flex-row justify-between">
+              <label className="block text-black" htmlFor="firstName">
+                First Name*
+              </label>
+              <div className="relative ">
+                <Field
+                  className="w-[255px] text-black md:w-[344px] lg:w-[432px] p-2 border border-gray-300 rounded"
+                  type="text"
+                  name="firstName" />
+                <ErrorMessage
+                  name="firstName"
+                  component="div"
+                  className="absolute inset-y-0 right-2 flex items-center text-red-600" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 md:flex-row justify-between ">
+              <label className="block text-black" htmlFor="lastName">
+                Last Name*
+              </label>
+              <div className="relative">
+                <Field
+                  className="w-[255px] text-black md:w-[344px] lg:w-[432px] p-2 border border-gray-300 rounded"
+                  type="text"
+                  name="lastName" />
+                <ErrorMessage
+                  name="lastName"
+                  component="div"
+                  className="absolute inset-y-0 right-2 flex items-center text-red-600" />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 md:flex-row justify-between ">
+              <label className="block text-black" htmlFor="email">
+                Email*
+              </label>
+              <div className="relative">
+                <Field
+                  className="w-[255px] text-black md:w-[344px] lg:w-[432px] p-2 border border-gray-300 rounded"
+                  type="email"
+                  name="email" />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="absolute inset-y-0 right-2 flex items-center text-red-600" />
+              </div>
+            </div>
+
+          </Form>
+          <hr className="my-10" />
+          
+          <div className="flex justify-end">
+          <button
+                type="submit"
+                disabled={!isValid || isSubmitting}
+                className={`mt-4 w-[91px] flex justify-center items-center text-base font-semibold text-white rounded-lg h-[46px] ${
+                  isValid && !isSubmitting ? "bg-[#633CFF]" : "opacity-[25%] bg-[#633CFF] cursor-not-allowed"
+                }`}
+              >
+                Save
+              </button>
+      </div>
+          </>
+        )}
+      </Formik>
+
     </div>
   );
 };

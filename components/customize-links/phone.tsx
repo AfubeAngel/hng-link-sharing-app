@@ -4,9 +4,30 @@ import Image from "next/image";
 interface PhoneViewProps {
   links: { url: string; label: string }[];
   profileImage: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
-const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage }) => {
+const labelToImageMap: { [key: string]: string } = {
+    GitHub: "/listbox-images/github.svg",
+    "Frontend Mentor": "/listbox-images/frontendmentor.svg",
+    Twitter: "/listbox-images/twitter.svg",
+    LinkedIn: "/listbox-images/linkedin.svg",
+    YouTube: "/listbox-images/youtube.svg",
+    Facebook: "/listbox-images/facebook.svg",
+    Twitch: "/listbox-images/twitch.svg",
+    "Dev.to": "/listbox-images/devto.svg",
+    Codewars: "/listbox-images/codewars.svg",
+    Codepen: "/listbox-images/codepen.svg",
+    freeCodeCamp: "/listbox-images/freecodecamp.svg",
+    GitLab: "/listbox-images/gitlab.svg",
+    Hashnode: "/listbox-images/hashnode.svg",
+    "Stack Overflow": "/listbox-images/stackoverflow.svg",
+  };
+  
+
+const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage, firstName, lastName, email }) => {
   return (
     <div className="relative flex justify-center items-center h-full border border-gray-50 rounded-[12px] ">
       <div className="relative">
@@ -25,13 +46,22 @@ const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage }) => {
                 />
               )}
             </div>
-            <div className="w-[160px] h-[16px] rounded-[104px] bg-gray-300 mb-2"></div>
-            <div className="w-[72px] h-[8px] rounded-[104px] bg-gray-300 mb-14"></div>
+            <div className="w-[160px] h-[16px] rounded-[104px] bg-gray-300 mb-2">
+              <div className="text-center text-black">{firstName} {lastName}</div>
+            </div>
+            <div className="w-[72px] h-[8px] rounded-[104px] bg-gray-300 mb-14">
+              <div className="text-center text-black">{email}</div>
+            </div>
 
             <div className="link-boxes flex flex-wrap justify-center w-full gap-4">
               {links.map((link, index) => (
                 <div key={index} className="link-box w-[237px] h-11 bg-gray-300 rounded-lg flex items-center justify-center">
-                  <span className="text-white">{link.label}</span>
+                  <Image
+                    src={labelToImageMap[link.label] || "/images/default-icon.png"}
+                    alt={link.label}
+                    width={237}
+                    height={24}
+                  />
                 </div>
               ))}
               {Array.from({ length: 4 - links.length }).map((_, index) => (

@@ -18,7 +18,7 @@ const Customizelink = () => {
       <Nav setActiveForm={setActiveForm} />
       <div className="flex ">
         <div className="hidden lg:block lg:w-1/3 ">
-          <PhoneView links={links} profileImage={profileImage} />
+          <PhoneView links={links} profileImage={profileImage} firstName={""} lastName={""} email={""} />
         </div>
         <div className="w-full lg:w-2/3 p-4">
           <FormContainer activeForm={activeForm} updateProfileData={updateProfileData}  />

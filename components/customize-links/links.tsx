@@ -42,22 +42,24 @@ const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
   }, []);
   
   const handleSave = async () => {
-    try {
-      if (user) {
-        const userId = user.uid;
-        const userRef = doc(db, "users", userId);
-        console.log('user-uid:::', userId);
-        console.log('userRef:::', userRef);
-        console.log('Data to be saved:', { links });
-        await setDoc(userRef, { links }, { merge: true });
-        updateProfileData(links); 
-        alert("Links saved successfully!");
-      } else {
-        alert("No user is signed in.");
-      }
-    } catch (error) {
-      console.error("Error saving links: ", error);
-    }
+    updateProfileData(links); 
+
+    // try {
+    //   if (user) {
+    //     const userId = user.uid;
+    //     const userRef = doc(db, "users", userId);
+    //     console.log('user-uid:::', userId);
+    //     console.log('userRef:::', userRef);
+    //     console.log('Data to be saved:', { links });
+    //     await setDoc(userRef, { links }, { merge: true });
+    //     updateProfileData(links); 
+    //     alert("Links saved successfully!");
+    //   } else {
+    //     alert("No user is signed in.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error saving links: ", error);
+    // }
   };
 
   return (
