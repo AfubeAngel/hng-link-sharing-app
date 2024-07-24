@@ -4,7 +4,7 @@ import PlatformDropdown from "./link-listbox";
 import PhoneView from "./phone";
 import { auth, db } from "@/lib/firebase";
 // import { doc, setDoc } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+// import { onAuthStateChanged } from "firebase/auth";
 
 interface LinkFormProps {
     updateProfileData: (links: { label: string; url: string }[]) => void;
@@ -33,13 +33,13 @@ const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
   };
 
   
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+//       setUser(currentUser);
+//     });
     
-    return () => unsubscribe();
-  }, []);
+//     return () => unsubscribe();
+//   }, []);
   
   const handleSave = async () => {
     updateProfileData(links); 
