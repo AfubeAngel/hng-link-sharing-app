@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import Image from "next/image";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 interface ProfileFormProps {
   updateProfileData: (links: { label: string; url: string }[], profileImage: string, firstName: string, lastName: string, email: string) => void;
@@ -9,6 +12,8 @@ interface ProfileFormProps {
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
   const [profileImage, setProfileImage] = useState<string>("");
+  const [user, setUser] = useState<any>(null);
+
 
   const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -20,12 +25,38 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
       reader.readAsDataURL(file);
     }
   };  
-  
-  const handleSave = (values:any) => {
-    console.log('test123:::');
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleSave = async (values: any) => {
     updateProfileData([], profileImage, values.firstName, values.lastName, values.email);
+    // try {
+    //   if (user) {
+    //     const userId = user.uid;
+    //     const userRef = doc(db, "users", userId);
+        
+    //     // Save profile data in Firestore
+    //     await setDoc(userRef, {
+    //       profileImage,
+    //       firstName: values.firstName,
+    //       lastName: values.lastName,
+    //       email: values.email
+    //     }, { merge: true });
+        
+    //     alert("Profile saved successfully!");
+    //   } else {
+    //     alert("No user is signed in.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error saving profile: ", error);
+    // }
   };
+
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required("Can’t be empty"),
@@ -64,9 +95,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
       <Formik
         initialValues={{ firstName: "", lastName: "", email: "" }}
         validationSchema={validationSchema}
-        onSubmit={(values) => {
-          handleSave(values);
-        }}
+        onSubmit={handleSave}
+
+        // onSubmit={(values) => {
+        //   handleSave(values);
+        // }}
       >
         {({ isSubmitting, isValid, handleSubmit }) => (
           <>

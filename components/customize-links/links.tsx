@@ -3,8 +3,8 @@ import Image from "next/image";
 import PlatformDropdown from "./link-listbox";
 import PhoneView from "./phone";
 import { auth, db } from "@/lib/firebase";
-// import { doc, setDoc } from "firebase/firestore";
-// import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 interface LinkFormProps {
     updateProfileData: (links: { label: string; url: string }[]) => void;
@@ -14,7 +14,6 @@ interface LinkFormProps {
 const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [links, setLinks] = useState<{ label: string; url: string }[]>([]);
-  const [profileImage, setProfileImage] = useState<string>("");
   const [user, setUser] = useState<any>(null);
 
   const handleAddLink = () => {
@@ -34,26 +33,29 @@ const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
   };
 
   
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-//       setUser(currentUser);
-//     });
-    
-//     return () => unsubscribe();
-//   }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log("Authenticated user:", currentUser);
+        setUser(currentUser);
+      } else {
+        console.log("No user is signed in.");
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+  
   
   const handleSave = async () => {
     updateProfileData(links); 
-
     // try {
     //   if (user) {
     //     const userId = user.uid;
     //     const userRef = doc(db, "users", userId);
-    //     console.log('user-uid:::', userId);
-    //     console.log('userRef:::', userRef);
-    //     console.log('Data to be saved:', { links });
+  
     //     await setDoc(userRef, { links }, { merge: true });
-    //     updateProfileData(links); 
+
     //     alert("Links saved successfully!");
     //   } else {
     //     alert("No user is signed in.");
@@ -62,6 +64,8 @@ const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
     //   console.error("Error saving links: ", error);
     // }
   };
+
+  
 
   return (
     <div className="bg-white border-gray-50 rounded-lg p-6 md:p-10 w-full max-w-[808px]">

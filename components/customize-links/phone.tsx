@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
+import { saveProfile } from "../../lib/profile";
+import useAuth from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 
 interface PhoneViewProps {
   links: { url: string; label: string }[];
@@ -10,24 +13,56 @@ interface PhoneViewProps {
 }
 
 const labelToImageMap: { [key: string]: string } = {
-    GitHub: "/listbox-images/github.svg",
-    "Frontend Mentor": "/listbox-images/frontendmentor.svg",
-    Twitter: "/listbox-images/twitter.svg",
-    LinkedIn: "/listbox-images/linkedin.svg",
-    YouTube: "/listbox-images/youtube.svg",
-    Facebook: "/listbox-images/facebook.svg",
-    Twitch: "/listbox-images/twitch.svg",
-    "Dev.to": "/listbox-images/devto.svg",
-    Codewars: "/listbox-images/codewars.svg",
-    Codepen: "/listbox-images/codepen.svg",
-    freeCodeCamp: "/listbox-images/freecodecamp.svg",
-    GitLab: "/listbox-images/gitlab.svg",
-    Hashnode: "/listbox-images/hashnode.svg",
-    "Stack Overflow": "/listbox-images/stackoverflow.svg",
-  };
-  
+  GitHub: "/listbox-images/github.svg",
+  "Frontend Mentor": "/listbox-images/frontendmentor.svg",
+  Twitter: "/listbox-images/twitter.svg",
+  LinkedIn: "/listbox-images/linkedin.svg",
+  YouTube: "/listbox-images/youtube.svg",
+  Facebook: "/listbox-images/facebook.svg",
+  Twitch: "/listbox-images/twitch.svg",
+  "Dev.to": "/listbox-images/devto.svg",
+  Codewars: "/listbox-images/codewars.svg",
+  Codepen: "/listbox-images/codepen.svg",
+  freeCodeCamp: "/listbox-images/freecodecamp.svg",
+  GitLab: "/listbox-images/gitlab.svg",
+  Hashnode: "/listbox-images/hashnode.svg",
+  "Stack Overflow": "/listbox-images/stackoverflow.svg",
+};
 
-const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage, firstName, lastName, email }) => {
+const PhoneView: React.FC<PhoneViewProps> = ({
+    links = [],
+    profileImage = "",
+    firstName = "",
+    lastName = "",
+    email = "",
+}) => {
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const saveUserProfile = async () => {
+      if (user) {
+        // Ensure profileData fields are not undefined
+        const profileData = {
+          profileImage: profileImage || "",
+          firstName: firstName || "",
+          lastName: lastName || "",
+          email: email || "",
+          links: links || [],
+        };
+
+        try {
+          await saveProfile(user.uid, profileData);
+          console.log("Profile saved successfully!");
+        } catch (error) {
+          console.error("Error saving profile:", error);
+        }
+      }
+    };
+
+    saveUserProfile();
+  }, [profileImage, firstName, lastName, email, links, user]);
+
+
   return (
     <div className="relative flex justify-center items-center h-full border border-gray-50 rounded-[12px] ">
       <div className="relative">
@@ -47,17 +82,26 @@ const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage, firstName, l
               )}
             </div>
             <div className="w-[160px] h-[16px] rounded-[104px] bg-gray-300 mb-2">
-              <div className="text-center font-semibold text-[18px] leading-[27px] text-black bg-white ">{firstName} {lastName}</div>
+              <div className="text-center font-semibold text-[18px] leading-[27px] text-black bg-white ">
+                {firstName} {lastName}
+              </div>
             </div>
             <div className="w-[72px] mt-1 h-[8px] rounded-[104px] bg-gray-300 mb-14">
-              <div className="w-full font-normal text-sm text-black bg-white">{email}</div>
+              <div className="w-full font-normal text-sm text-black bg-white">
+                {email}
+              </div>
             </div>
 
             <div className="link-boxes flex flex-wrap justify-center w-full gap-4">
               {links.map((link, index) => (
-                <div key={index} className="link-box w-[237px] h-11 bg-gray-300 rounded-lg flex items-center justify-center">
+                <div
+                  key={index}
+                  className="link-box w-[237px] h-11 bg-gray-300 rounded-lg flex items-center justify-center"
+                >
                   <Image
-                    src={labelToImageMap[link.label] || "/images/default-icon.png"}
+                    src={
+                      labelToImageMap[link.label] || "/images/default-icon.png"
+                    }
                     alt={link.label}
                     width={237}
                     height={24}
@@ -65,7 +109,10 @@ const PhoneView: React.FC<PhoneViewProps> = ({ links, profileImage, firstName, l
                 </div>
               ))}
               {Array.from({ length: 4 - links.length }).map((_, index) => (
-                <div key={index} className="link-box w-[237px] h-11 bg-gray-300 rounded-lg"></div>
+                <div
+                  key={index}
+                  className="link-box w-[237px] h-11 bg-gray-300 rounded-lg"
+                ></div>
               ))}
             </div>
           </div>
