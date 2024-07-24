@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { useRouter } from 'next/router'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import Link from 'next/link'
 
 
 export default function Login() {
@@ -92,7 +93,7 @@ export default function Login() {
           )}
         </Formik>
         <p className="mt-4 text-sm text-center text-black">
-          Don’t have an account? <a href="/" className="text-[#633CFF] ">Create account</a>
+          Don’t have an account? <Link href="/" className="text-[#633CFF] ">Create account</Link>
         </p>
       </div>
     </section>

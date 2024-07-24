@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import router from "next/router";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -103,7 +104,7 @@ export default function Home() {
           )}
         </Formik>
         <p className="mt-4 text-base text-center text-black">
-          Already have an account? <a href="/auth/login" className="text-[#633CFF]">Login</a>
+          Already have an account? <Link href="/auth/login" className="text-[#633CFF]">Login</Link>
         </p>
       </div>
     </section>

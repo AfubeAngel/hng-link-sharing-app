@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Nav from '@/components/customize-links/nav';
-import FormContainer from '@/components/customize-links/FormContainer';
-import PhoneView from '@/components/customize-links/phone';
+import React, { useState } from "react";
+import Nav from "@/components/customize-links/nav";
+import FormContainer from "@/components/customize-links/FormContainer";
+import PhoneView from "@/components/customize-links/phone";
 
 const Customizelink = () => {
   const [activeForm, setActiveForm] = useState<'link' | 'profile'>('link');

@@ -106,7 +106,7 @@ const LinkForm: React.FC = () => {
               <input
                 type="url"
                 placeholder="e.g. https://www.github.com/johnappleseed"
-                className="pl-10 w-[255px] md:w-[600px] lg:w-[688px] mb-4 border p-2 rounded"
+                className="pl-10 text-black w-[255px] md:w-[600px] lg:w-[688px] mb-4 border p-2 rounded"
                 value={link.url}
                 onChange={(e) => handleLinkChange(index, "url", e.target.value)}
               />
@@ -127,7 +127,6 @@ const LinkForm: React.FC = () => {
         Save
       </button>
       </div>
-      {isAddingLink && <PhoneView links={links} profileImage={profileImage} />}
     </div>
   );
 };
