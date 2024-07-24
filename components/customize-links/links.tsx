@@ -3,7 +3,7 @@ import Image from "next/image";
 import PlatformDropdown from "./link-listbox";
 import PhoneView from "./phone";
 import { auth, db } from "@/lib/firebase";
-import { doc, setDoc } from "firebase/firestore";
+// import { doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 interface LinkFormProps {
