@@ -1,6 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 
-const ProfileForm: React.FC = () => {
+interface ProfileFormProps {
+  updateProfileData: (links: { label: string; url: string }[], profileImage: string) => void;
+}
+
+const ProfileForm: React.FC<ProfileFormProps> = ({ updateProfileData }) => {
+  const [profileImage, setProfileImage] = useState<string>("");
+
+  const handleProfileImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };  
+  
+  const handleSave = () => {
+    // Update profile image in Firebase or any other backend
+    // For this example, we're updating the data directly
+    updateProfileData([], profileImage);
+  };
+
+
+
   return (
     <div>
       <h2 className="text-black">Profile Details</h2>
@@ -30,7 +55,7 @@ const ProfileForm: React.FC = () => {
           <label className="text-black">Email</label>
           <input type="email" name="email" required />
         </div>
-        <button className="text-black" type="submit">Save</button>
+        <button onClick={handleSave} className="text-black" type="submit">Save</button>
       </form>
     </div>
   );

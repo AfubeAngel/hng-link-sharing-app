@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import PlatformDropdown from "./link-listbox";
 import PhoneView from "./phone";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
-const LinkForm: React.FC = () => {
+interface LinkFormProps {
+    updateProfileData: (links: { label: string; url: string }[]) => void;
+  }  
+
+const LinkForm: React.FC<LinkFormProps> = ({ updateProfileData }) => {
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [links, setLinks] = useState<{ label: string; url: string }[]>([]);
   const [profileImage, setProfileImage] = useState<string>("");
-
+  const [user, setUser] = useState<any>(null);
 
   const handleAddLink = () => {
     setIsAddingLink(true);
@@ -27,17 +32,33 @@ const LinkForm: React.FC = () => {
     setLinks(newLinks);
   };
 
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    
+    return () => unsubscribe();
+  }, []);
+  
   const handleSave = async () => {
     try {
-      const userId = "your-user-id"; // Replace with actual user ID
-      const userRef = doc(db, "users", userId);
-      await setDoc(userRef, { links }, { merge: true });
-      alert("Links saved successfully!");
+      if (user) {
+        const userId = user.uid;
+        const userRef = doc(db, "users", userId);
+        console.log('user-uid:::', userId);
+        console.log('userRef:::', userRef);
+        console.log('Data to be saved:', { links });
+        await setDoc(userRef, { links }, { merge: true });
+        updateProfileData(links); 
+        alert("Links saved successfully!");
+      } else {
+        alert("No user is signed in.");
+      }
     } catch (error) {
       console.error("Error saving links: ", error);
     }
   };
-
 
   return (
     <div className="bg-white border-gray-50 rounded-lg p-6 md:p-10 w-full max-w-[808px]">
@@ -91,7 +112,7 @@ const LinkForm: React.FC = () => {
               <label className="text-black">Platform</label>
               <PlatformDropdown
               value={link.label}
-              onChange={(value) => handleLinkChange(index, "title", value)}
+              onChange={(value) => handleLinkChange(index, "label", value)}
             />
 
               <label className="text-black">Link</label>
